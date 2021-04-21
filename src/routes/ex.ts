@@ -12,7 +12,7 @@ import {
 const router = Router();
 
 router.post("/", create);
-router.get("/", getById);
+router.get("/", getAllEx);
 router.get("/name", read);
 router.get("/:id", getById);
 router.patch("/:id", update);
