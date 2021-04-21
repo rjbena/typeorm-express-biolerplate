@@ -1,21 +1,25 @@
 import "reflect-metadata";
-import {createConnection} from "typeorm";
-import {User} from "./entity/User";
+import { createConnection } from "typeorm";
+import express from "express";
+import morgan from "morgan";
+import dotenv from "dotenv";
 
-createConnection().then(async connection => {
+dotenv.config();
 
-    console.log("Inserting a new user into the database...");
-    const user = new User();
-    user.firstName = "Timber";
-    user.lastName = "Saw";
-    user.age = 25;
-    await connection.manager.save(user);
-    console.log("Saved a new user with id: " + user.id);
+const app = express();
 
-    console.log("Loading users from the database...");
-    const users = await connection.manager.find(User);
-    console.log("Loaded users: ", users);
+app.use(express.json());
+app.use(morgan("dev"));
 
-    console.log("Here you can setup and run express/koa/any other framework.");
+const PORT = process.env.PORT;
 
-}).catch(error => console.log(error));
+app.listen(PORT, async () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+
+  try {
+    await createConnection();
+    console.log("Database connected");
+  } catch (error) {
+    console.log(error);
+  }
+});
